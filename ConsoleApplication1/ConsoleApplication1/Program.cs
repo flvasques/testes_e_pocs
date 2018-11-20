@@ -15,6 +15,9 @@ namespace ConsoleApplication1
             DateTime roundtripDate = DateTime.Parse(formattedDate, null, DateTimeStyles.RoundtripKind);
             Console.WriteLine(roundtripDate.ToString("dd/MM/yyyy - HH:mm"));
             IList<Teste> teste = new List<Teste>();
+            IList<Comparador> filtro = new List<Comparador>();
+            filtro.Add(new Comparador() { Item = "b" });
+            filtro.Add(new Comparador() { Item = "c" });
             teste.Add(new Teste()
             {
                 Dado = "a",
@@ -24,6 +27,21 @@ namespace ConsoleApplication1
             {
                 Dado = "b",
                 Subtotal = 2
+            });
+            teste.Add(new Teste()
+            {
+                Dado = "c",
+                Subtotal = 3
+            });
+            teste.Add(new Teste()
+            {
+                Dado = "d",
+                Subtotal = 4
+            });
+            teste.Add(new Teste()
+            {
+                Dado = "b",
+                Subtotal = 5
             });
             int total = teste.Select(x => x.Subtotal).Sum();
             TimeSpan time = TimeSpan.FromSeconds(3600);
@@ -45,6 +63,14 @@ namespace ConsoleApplication1
             Console.WriteLine(numeroGrande.ToString("0.000"));
             Console.WriteLine(Senha.Gerar(6));
             Console.WriteLine(diaNumerico.ToString());
+
+            var novaLista = (from a in teste
+                             join b in filtro on a.Dado equals b.Item
+                             select a);
+            foreach (var item in novaLista)
+            {
+                Console.WriteLine(item.Dado + " " + item.Subtotal);
+            }
             Console.ReadLine();
         }
     }
@@ -52,6 +78,10 @@ namespace ConsoleApplication1
     {
         public string Dado { get; set; }
         public int Subtotal { get; set; }
+    }
+    public class Comparador
+    {
+        public string Item { get; set; }
     }
      public static class Senha
      {
